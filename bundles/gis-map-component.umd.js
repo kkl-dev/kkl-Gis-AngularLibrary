@@ -1,8 +1,10 @@
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('esri-loader')) :
-    typeof define === 'function' && define.amd ? define('gis-map-component', ['exports', '@angular/core', 'esri-loader'], factory) :
-    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global["gis-map-component"] = {}, global.ng.core, global.esriLoader));
-})(this, (function (exports, i0, esriLoader) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('esri-loader'), require('@arcgis/core/widgets/Zoom')) :
+    typeof define === 'function' && define.amd ? define('gis-map-component', ['exports', '@angular/core', 'esri-loader', '@arcgis/core/widgets/Zoom'], factory) :
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global["gis-map-component"] = {}, global.ng.core, global.esriLoader, global.Zoom));
+})(this, (function (exports, i0, esriLoader, Zoom) { 'use strict';
+
+    function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
     function _interopNamespace(e) {
         if (e && e.__esModule) return e;
@@ -23,6 +25,7 @@
     }
 
     var i0__namespace = /*#__PURE__*/_interopNamespace(i0);
+    var Zoom__default = /*#__PURE__*/_interopDefaultLegacy(Zoom);
 
     var GisBaseService = /** @class */ (function () {
         function GisBaseService(config) {
@@ -478,6 +481,8 @@
                                     //view.ui.add(layerList, "top-right");
                                     var search = new Search_1({ view: view_1 });
                                     //view.ui.add(search, "top-right");
+                                    var zoom = new Zoom__default["default"]({ view: view_1, layout: "horizontal" });
+                                    //view.ui.add(zoom, "bottom-right");
                                     //const EsriPwoerByelements = document.getElementsByClassName("esri-attribution__sources esri-interactive");
                                     //for (let i = 0; i < EsriPwoerByelements.length; i++) {
                                     //  EsriPwoerByelements[i].setAttribute("style", "display:none");
@@ -518,14 +523,15 @@
                                 var az = _this.queryFeatureLayer.queryFeatures(query);
                                 az.then(function (results) {
                                     layerView.highlight(results.features[0]);
+                                    view_1.goTo({ geometry: results.features[0].geometry.extent.expand(3) });
                                 });
-                                _this.queryFeatureLayer.queryExtent(query)
-                                    .then(function (response) {
-                                    if (response.extent !== null) {
-                                        response.extent.spatialReference = view_1.spatialReference;
-                                        view_1.goTo({ geometry: response.extent.expand(3) });
-                                    }
-                                });
+                                //this.queryFeatureLayer.queryExtent(query)
+                                //  .then(response => {
+                                //    if (response.extent !== null) {
+                                //      response.extent.spatialReference = view.spatialReference;
+                                //      view.goTo({  geometry: response.extent.expand(3) });
+                                //    }
+                                //  });
                             });
                             return [2 /*return*/, view_1];
                         case 4:

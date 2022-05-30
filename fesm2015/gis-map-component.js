@@ -2,6 +2,7 @@ import * as i0 from '@angular/core';
 import { Injectable, Inject, Component, ViewChild, Input, NgModule } from '@angular/core';
 import { __awaiter } from 'tslib';
 import { loadModules } from 'esri-loader';
+import Zoom from '@arcgis/core/widgets/Zoom';
 
 class GisBaseService {
     constructor(config) {
@@ -101,6 +102,8 @@ class GisMapComponentComponent {
                     //view.ui.add(layerList, "top-right");
                     var search = new Search({ view: view });
                     //view.ui.add(search, "top-right");
+                    var zoom = new Zoom({ view: view, layout: "horizontal" });
+                    //view.ui.add(zoom, "bottom-right");
                     //const EsriPwoerByelements = document.getElementsByClassName("esri-attribution__sources esri-interactive");
                     //for (let i = 0; i < EsriPwoerByelements.length; i++) {
                     //  EsriPwoerByelements[i].setAttribute("style", "display:none");
@@ -139,14 +142,15 @@ class GisMapComponentComponent {
                     var az = this.queryFeatureLayer.queryFeatures(query);
                     az.then(function (results) {
                         layerView.highlight(results.features[0]);
+                        view.goTo({ geometry: results.features[0].geometry.extent.expand(3) });
                     });
-                    this.queryFeatureLayer.queryExtent(query)
-                        .then(response => {
-                        if (response.extent !== null) {
-                            response.extent.spatialReference = view.spatialReference;
-                            view.goTo({ geometry: response.extent.expand(3) });
-                        }
-                    });
+                    //this.queryFeatureLayer.queryExtent(query)
+                    //  .then(response => {
+                    //    if (response.extent !== null) {
+                    //      response.extent.spatialReference = view.spatialReference;
+                    //      view.goTo({  geometry: response.extent.expand(3) });
+                    //    }
+                    //  });
                 });
                 return view;
             }
