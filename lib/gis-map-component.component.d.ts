@@ -25,6 +25,7 @@ export declare class GisMapComponentComponent implements OnInit {
     private QueryLayer;
     private QueryStr;
     private legend;
+    private measurement;
     set layerList(value: string[]);
     set queryLayer(value: string);
     set queryStr(value: string);
@@ -33,10 +34,8 @@ export declare class GisMapComponentComponent implements OnInit {
     initializeMap(): Promise<any>;
     ngOnInit(): void;
     buttonLegendClick(): void;
-    switchView(Map: MapConstructor, layerView: any, measurement: any): void;
-    clearMeasurements(measurement: any): void;
-    distanceMeasurement(measurement: any): void;
-    areaMeasurement(measurement: any): void;
+    distanceMeasurement(): void;
+    areaMeasurement(): void;
     static ɵfac: i0.ɵɵFactoryDeclaration<GisMapComponentComponent, never>;
     static ɵcmp: i0.ɵɵComponentDeclaration<GisMapComponentComponent, "GisBase-GisMapComponent", never, { "layerList": "layerList"; "queryLayer": "queryLayer"; "queryStr": "queryStr"; }, {}, never, never>;
 }

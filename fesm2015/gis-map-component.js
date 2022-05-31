@@ -5,7 +5,6 @@ import { loadModules } from 'esri-loader';
 import Zoom from '@arcgis/core/widgets/Zoom';
 import Compass from '@arcgis/core/widgets/Compass';
 import ScaleBar from '@arcgis/core/widgets/ScaleBar';
-import Legend from '@arcgis/core/widgets/Legend';
 
 class GisBaseService {
     constructor(config) {
@@ -37,9 +36,6 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.16", ngImpo
         }], ctorParameters: function () { return []; } });
 
 class GisMapComponentComponent {
-    //public mapView: MapView = new MapView();
-    //public featerLayer: FeatureLayer = new FeatureLayer();
-    //public featerLayer1: FeatureLayer = new FeatureLayer();
     constructor(gisBaseService) {
         this.gisBaseService = gisBaseService;
         this.linkProm = loadCustomStyle('https://js.arcgis.com/4.23/esri/themes/light/main.css');
@@ -81,10 +77,10 @@ class GisMapComponentComponent {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 yield this.linkProm;
-                const [MapView, WebMap, LayerList, Search, FeatureLayer] = yield loadModules([
+                const [MapView, WebMap, LayerList, FeatureLayer, Search, Measurement, Legend] = yield loadModules([
                     "esri/views/MapView", "esri/WebMap",
-                    "esri/widgets/LayerList", "esri/widgets/Search",
-                    "esri/layers/FeatureLayer"
+                    "esri/widgets/LayerList", "esri/layers/FeatureLayer",
+                    "esri/widgets/Search", "esri/widgets/Measurement", "esri/widgets/Legend"
                 ]);
                 const webMap = new WebMap({
                     basemap: "topo"
@@ -122,13 +118,10 @@ class GisMapComponentComponent {
                     //view.ui.add(scaleBar, { position: "bottom-left"});
                     //const basemapGallery = new BasemapGallery({  view: view,    container: document.createElement("div")    });
                     //view.ui.add(basemapGallery, {   position: "top-right"    });
-                    //let legend = new Legend({  view: view   });
-                    //view.ui.add(legend, "bottom-right");
-                    //var measurement = new Measurement({ view: view });
-                    //// Create new instance of the Legend widget
                     this.legend = new Legend({ view: view, style: { type: "classic", layout: 'stack' }, layerInfos: [{ layer: this.queryFeatureLayer, title: "שכבת חלקות" }] });
                     view.ui.add(this.legend, "bottom-right");
-                    //view.ui.add(measurement, "bottom-right");
+                    this.measurement = new Measurement({ view: view });
+                    view.ui.add(this.measurement, "bottom-right");
                     ////this.buttonSwitch.addEventListener("click", () => { this.switchView(Map, this.queryFeatureLayer,  measurement); });
                     //this.buttonDistance.addEventListener("click", () => { this.distanceMeasurement( measurement); });
                     //this.buttonArea.addEventListener("click", () => { this.areaMeasurement(measurement); });
@@ -195,38 +188,37 @@ class GisMapComponentComponent {
     buttonLegendClick() {
         this.legend.visible = !this.legend.visible;
     }
-    switchView(Map, layerView, measurement) {
-        // Clone the viewpoint for the MapView or SceneView
-        const viewpoint = layerView.viewpoint.clone();
-        // Get the view type, either 2d or 3d
-        const type = layerView.type;
-        // Clear any measurements that had been drawn
-        this.clearMeasurements(measurement);
-        // Reset the measurement tools in the div
-        layerView.container = null;
-        layerView = null;
-        // Set the view based on whether it switched to 2D MapView or 3D SceneView
-        layerView = Map;
-        layerView.set({
-            container: "viewDiv",
-            viewpoint: viewpoint
-        });
-    }
-    clearMeasurements(measurement) {
-        const distanceButton = document.getElementById('distance');
-        const areaButton = document.getElementById('area');
-        this.buttonDistance.classList.remove("active");
-        this.buttonArea.classList.remove("active");
-        measurement.clear();
-    }
-    distanceMeasurement(measurement) {
-        measurement.activeTool = "distance";
-        alert(measurement.activeWidget);
+    //switchView(Map: MapConstructor, layerView: any, measurement: any) {
+    //  // Clone the viewpoint for the MapView or SceneView
+    //  const viewpoint = layerView.viewpoint.clone();
+    //  // Get the view type, either 2d or 3d
+    //  const type = layerView.type;
+    //  // Clear any measurements that had been drawn
+    //  this.clearMeasurements(measurement);
+    //  // Reset the measurement tools in the div
+    //  layerView.container = null;
+    //  layerView = null;
+    //  // Set the view based on whether it switched to 2D MapView or 3D SceneView
+    //  layerView = Map;
+    //  layerView.set({
+    //    container: "viewDiv",
+    //    viewpoint: viewpoint
+    //  });
+    //}
+    //clearMeasurements(measurement: any) {
+    //  const distanceButton = document.getElementById('distance');
+    //  const areaButton = document.getElementById('area');
+    //  this.buttonDistance.classList.remove("active");
+    //  this.buttonArea.classList.remove("active");
+    //  measurement.clear();
+    //}
+    distanceMeasurement() {
+        this.measurement.activeTool = "distance";
         this.buttonDistance.classList.add("active");
         this.buttonArea.classList.remove("active");
     }
-    areaMeasurement(measurement) {
-        measurement.activeTool = "area";
+    areaMeasurement() {
+        this.measurement.activeTool = "area";
         this.buttonDistance.classList.remove("active");
         this.buttonArea.classList.add("active");
     }
@@ -239,13 +231,13 @@ GisMapComponentComponent.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "12.0.0
    
       <div id="toolbarDiv222" style="position: absolute;margin-left: -50px;" class="e____sri-component esri-widget">
         <button  #buttonLegend (click)="buttonLegendClick()" class="esri-widget--button esri-interactive esri-icon-legend" title="legend Panel">    </button>
-        <button  style="display:none" #buttonDistance class="esri-widget--button esri-interactive esri-icon-measure-line" title="Distance Measurement Tool">    </button>
-        <button  style="display:none" #buttonArea class="esri-widget--button esri-interactive esri-icon-measure-area" title="Area Measurement Tool">    </button>
+        <button  #buttonDistance (click)="distanceMeasurement()" class="esri-widget--button esri-interactive esri-icon-measure-line" title="Distance Measurement Tool">    </button>
+        <button  #buttonArea (click)="areaMeasurement()"  class="esri-widget--button esri-interactive esri-icon-measure-area" title="Area Measurement Tool">    </button>
         <button  style="display:none" #buttonClear class="esri-widget--button esri-interactive esri-icon-trash" title="Clear Measurements">     </button>
       </div>
   </div>
 </div>
-  `, isInline: true, styles: ["#viewDiv{height:100%;width:100%;margin:0;padding:0}#toolbarDiv{position:relative;top:15px;right:35px;cursor:default;display:flex;flex-direction:row;flex-wrap:nowrap}#infoDiv{position:absolute;top:15px;left:60px}#infoDiv input{border:none;box-shadow:#0000004d 0 1px 2px}.esri-widget--button.active,.esri-widget--button.active:hover,.esri-widget--button.active:focus{cursor:default;background-color:#999696}.esri-widget--button.active path,.esri-widget--button.active:hover path,.esri-widget--button.active:focus path{fill:#e4e4e4}\n"] });
+  `, isInline: true, styles: [""] });
 i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.16", ngImport: i0, type: GisMapComponentComponent, decorators: [{
             type: Component,
             args: [{
@@ -257,8 +249,8 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.16", ngImpo
    
       <div id="toolbarDiv222" style="position: absolute;margin-left: -50px;" class="e____sri-component esri-widget">
         <button  #buttonLegend (click)="buttonLegendClick()" class="esri-widget--button esri-interactive esri-icon-legend" title="legend Panel">    </button>
-        <button  style="display:none" #buttonDistance class="esri-widget--button esri-interactive esri-icon-measure-line" title="Distance Measurement Tool">    </button>
-        <button  style="display:none" #buttonArea class="esri-widget--button esri-interactive esri-icon-measure-area" title="Area Measurement Tool">    </button>
+        <button  #buttonDistance (click)="distanceMeasurement()" class="esri-widget--button esri-interactive esri-icon-measure-line" title="Distance Measurement Tool">    </button>
+        <button  #buttonArea (click)="areaMeasurement()"  class="esri-widget--button esri-interactive esri-icon-measure-area" title="Area Measurement Tool">    </button>
         <button  style="display:none" #buttonClear class="esri-widget--button esri-interactive esri-icon-trash" title="Clear Measurements">     </button>
       </div>
   </div>
