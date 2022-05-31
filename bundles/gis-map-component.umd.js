@@ -1,8 +1,8 @@
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('esri-loader'), require('@arcgis/core/widgets/Zoom')) :
-    typeof define === 'function' && define.amd ? define('gis-map-component', ['exports', '@angular/core', 'esri-loader', '@arcgis/core/widgets/Zoom'], factory) :
-    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global["gis-map-component"] = {}, global.ng.core, global.esriLoader, global.Zoom));
-})(this, (function (exports, i0, esriLoader, Zoom) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('esri-loader'), require('@arcgis/core/widgets/Zoom'), require('@arcgis/core/widgets/Compass'), require('@arcgis/core/widgets/ScaleBar'), require('@arcgis/core/widgets/Legend')) :
+    typeof define === 'function' && define.amd ? define('gis-map-component', ['exports', '@angular/core', 'esri-loader', '@arcgis/core/widgets/Zoom', '@arcgis/core/widgets/Compass', '@arcgis/core/widgets/ScaleBar', '@arcgis/core/widgets/Legend'], factory) :
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global["gis-map-component"] = {}, global.ng.core, global.esriLoader, global.Zoom, global.Compass, global.ScaleBar, global.Legend));
+})(this, (function (exports, i0, esriLoader, Zoom, Compass, ScaleBar, Legend) { 'use strict';
 
     function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
@@ -26,6 +26,9 @@
 
     var i0__namespace = /*#__PURE__*/_interopNamespace(i0);
     var Zoom__default = /*#__PURE__*/_interopDefaultLegacy(Zoom);
+    var Compass__default = /*#__PURE__*/_interopDefaultLegacy(Compass);
+    var ScaleBar__default = /*#__PURE__*/_interopDefaultLegacy(ScaleBar);
+    var Legend__default = /*#__PURE__*/_interopDefaultLegacy(Legend);
 
     var GisBaseService = /** @class */ (function () {
         function GisBaseService(config) {
@@ -385,7 +388,7 @@
         //public featerLayer1: FeatureLayer = new FeatureLayer();
         function GisMapComponentComponent(gisBaseService) {
             this.gisBaseService = gisBaseService;
-            this.linkProm = loadCustomStyle('https://js.arcgis.com/4.2/esri/themes/dark/main.css');
+            this.linkProm = loadCustomStyle('https://js.arcgis.com/4.23/esri/themes/light/main.css');
         }
         Object.defineProperty(GisMapComponentComponent.prototype, "content", {
             set: function (content) {
@@ -409,6 +412,51 @@
             set: function (content) {
                 if (content) {
                     this.basemapGalleryDiv = content;
+                }
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(GisMapComponentComponent.prototype, "content7", {
+            set: function (content) {
+                if (content) {
+                    this.buttonLegend = content.nativeElement;
+                }
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(GisMapComponentComponent.prototype, "content3", {
+            set: function (content) {
+                if (content) {
+                    this.buttonDistance = content.nativeElement;
+                }
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(GisMapComponentComponent.prototype, "content4", {
+            set: function (content) {
+                if (content) {
+                    this.buttonArea = content.nativeElement;
+                }
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(GisMapComponentComponent.prototype, "content5", {
+            set: function (content) {
+                if (content) {
+                    this.buttonClear = content.nativeElement;
+                }
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(GisMapComponentComponent.prototype, "content6", {
+            set: function (content) {
+                if (content) {
+                    this.buttonSwitch = content.nativeElement;
                 }
             },
             enumerable: false,
@@ -483,6 +531,23 @@
                                     //view.ui.add(search, "top-right");
                                     var zoom = new Zoom__default["default"]({ view: view_1, layout: "horizontal" });
                                     //view.ui.add(zoom, "bottom-right");
+                                    var compassWidget = new Compass__default["default"]({ view: view_1 });
+                                    view_1.ui.add(compassWidget, "top-left");
+                                    var scaleBar = new ScaleBar__default["default"]({ view: view_1, unit: "metric", style: "ruler" });
+                                    //view.ui.add(scaleBar, { position: "bottom-left"});
+                                    //const basemapGallery = new BasemapGallery({  view: view,    container: document.createElement("div")    });
+                                    //view.ui.add(basemapGallery, {   position: "top-right"    });
+                                    //let legend = new Legend({  view: view   });
+                                    //view.ui.add(legend, "bottom-right");
+                                    //var measurement = new Measurement({ view: view });
+                                    //// Create new instance of the Legend widget
+                                    _this.legend = new Legend__default["default"]({ view: view_1, style: { type: "classic", layout: 'stack' }, layerInfos: [{ layer: _this.queryFeatureLayer, title: "שכבת חלקות" }] });
+                                    view_1.ui.add(_this.legend, "bottom-right");
+                                    //view.ui.add(measurement, "bottom-right");
+                                    ////this.buttonSwitch.addEventListener("click", () => { this.switchView(Map, this.queryFeatureLayer,  measurement); });
+                                    //this.buttonDistance.addEventListener("click", () => { this.distanceMeasurement( measurement); });
+                                    //this.buttonArea.addEventListener("click", () => { this.areaMeasurement(measurement); });
+                                    //this.buttonClear.addEventListener("click", () => { this.clearMeasurements(measurement); });
                                     //const EsriPwoerByelements = document.getElementsByClassName("esri-attribution__sources esri-interactive");
                                     //for (let i = 0; i < EsriPwoerByelements.length; i++) {
                                     //  EsriPwoerByelements[i].setAttribute("style", "display:none");
@@ -516,7 +581,6 @@
                         case 3:
                             _b.sent();
                             view_1.whenLayerView(this.queryFeatureLayer).then(function (layerView) {
-                                //this.layerHelkotView = layerView;
                                 var query = _this.queryFeatureLayer.createQuery();
                                 query.where = _this.QueryStr;
                                 query.outSpatialReference = view_1.spatialReference;
@@ -547,33 +611,55 @@
             this.initializeMap().then(function () {
                 console.log("View ready");
             });
-            //const webMap = new WebMap({
-            //  basemap: "topo"
-            //});
-            //webMap.add(this.featerLayer);
-            //webMap.add(this.featerLayer1);
-            //mapView = new MapView({
-            //  map: webMap,
-            //  container: this.mapViewEl.nativeElement
-            //});
-            //let layerList = new LayerList({ view: this.mapView });
-            //this.mapView.ui.add(layerList, { position: "top-left" });
-            //this.mapView.when(() => {
-            //  let layerList = new LayerList({ view: this.mapView, container: this.layerListDiv.nativeElement  });
-            //  this.mapView.ui.add(layerList, { position: "top-left" });
-            //  const search = new Search({ view: this.mapView, container: this.basemapGalleryDiv.nativeElement });
-            //  this.mapView.ui.add(search, "top-right");
-            //});
+        };
+        GisMapComponentComponent.prototype.buttonLegendClick = function () {
+            this.legend.visible = !this.legend.visible;
+        };
+        GisMapComponentComponent.prototype.switchView = function (Map, layerView, measurement) {
+            // Clone the viewpoint for the MapView or SceneView
+            var viewpoint = layerView.viewpoint.clone();
+            // Get the view type, either 2d or 3d
+            var type = layerView.type;
+            // Clear any measurements that had been drawn
+            this.clearMeasurements(measurement);
+            // Reset the measurement tools in the div
+            layerView.container = null;
+            layerView = null;
+            // Set the view based on whether it switched to 2D MapView or 3D SceneView
+            layerView = Map;
+            layerView.set({
+                container: "viewDiv",
+                viewpoint: viewpoint
+            });
+        };
+        GisMapComponentComponent.prototype.clearMeasurements = function (measurement) {
+            var distanceButton = document.getElementById('distance');
+            var areaButton = document.getElementById('area');
+            this.buttonDistance.classList.remove("active");
+            this.buttonArea.classList.remove("active");
+            measurement.clear();
+        };
+        GisMapComponentComponent.prototype.distanceMeasurement = function (measurement) {
+            measurement.activeTool = "distance";
+            alert(measurement.activeWidget);
+            this.buttonDistance.classList.add("active");
+            this.buttonArea.classList.remove("active");
+        };
+        GisMapComponentComponent.prototype.areaMeasurement = function (measurement) {
+            measurement.activeTool = "area";
+            this.buttonDistance.classList.remove("active");
+            this.buttonArea.classList.add("active");
         };
         return GisMapComponentComponent;
     }());
     GisMapComponentComponent.ɵfac = i0__namespace.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.16", ngImport: i0__namespace, type: GisMapComponentComponent, deps: [{ token: GisBaseService }], target: i0__namespace.ɵɵFactoryTarget.Component });
-    GisMapComponentComponent.ɵcmp = i0__namespace.ɵɵngDeclareComponent({ minVersion: "12.0.0", version: "12.2.16", type: GisMapComponentComponent, selector: "GisBase-GisMapComponent", inputs: { layerList: "layerList", queryLayer: "queryLayer", queryStr: "queryStr" }, viewQueries: [{ propertyName: "content", first: true, predicate: ["mapViewNode"], descendants: true, static: true }, { propertyName: "content2", first: true, predicate: ["layerListDiv"], descendants: true, static: true }, { propertyName: "content1", first: true, predicate: ["basemapGalleryDiv"], descendants: true, static: true }], ngImport: i0__namespace, template: "\n \n<div class='az' style=\"width:100%;height: 100% \">\n    \n \n    <div #mapViewNode style=\"width:80%;height: 80%;margin: auto;padding:50px;margin: 50px \"></div>\n  \n</div>\n  ", isInline: true });
+    GisMapComponentComponent.ɵcmp = i0__namespace.ɵɵngDeclareComponent({ minVersion: "12.0.0", version: "12.2.16", type: GisMapComponentComponent, selector: "GisBase-GisMapComponent", inputs: { layerList: "layerList", queryLayer: "queryLayer", queryStr: "queryStr" }, viewQueries: [{ propertyName: "content", first: true, predicate: ["mapViewNode"], descendants: true, static: true }, { propertyName: "content2", first: true, predicate: ["layerListDiv"], descendants: true, static: true }, { propertyName: "content1", first: true, predicate: ["basemapGalleryDiv"], descendants: true, static: true }, { propertyName: "content7", first: true, predicate: ["buttonLegend"], descendants: true, static: true }, { propertyName: "content3", first: true, predicate: ["buttonDistance"], descendants: true, static: true }, { propertyName: "content4", first: true, predicate: ["buttonArea"], descendants: true, static: true }, { propertyName: "content5", first: true, predicate: ["buttonClear"], descendants: true, static: true }, { propertyName: "content6", first: true, predicate: ["buttonSwitch"], descendants: true, static: true }], ngImport: i0__namespace, template: "\n \n<div class='az' style=\"width:100%;height: 100% \">\n    <div #mapViewNode style=\"width:100%;height: 100%  \">\n   \n      <div id=\"toolbarDiv222\" style=\"position: absolute;margin-left: -50px;\" class=\"e____sri-component esri-widget\">\n        <button  #buttonLegend (click)=\"buttonLegendClick()\" class=\"esri-widget--button esri-interactive esri-icon-legend\" title=\"legend Panel\">    </button>\n        <button  style=\"display:none\" #buttonDistance class=\"esri-widget--button esri-interactive esri-icon-measure-line\" title=\"Distance Measurement Tool\">    </button>\n        <button  style=\"display:none\" #buttonArea class=\"esri-widget--button esri-interactive esri-icon-measure-area\" title=\"Area Measurement Tool\">    </button>\n        <button  style=\"display:none\" #buttonClear class=\"esri-widget--button esri-interactive esri-icon-trash\" title=\"Clear Measurements\">     </button>\n      </div>\n  </div>\n</div>\n  ", isInline: true, styles: ["#viewDiv{height:100%;width:100%;margin:0;padding:0}#toolbarDiv{position:relative;top:15px;right:35px;cursor:default;display:flex;flex-direction:row;flex-wrap:nowrap}#infoDiv{position:absolute;top:15px;left:60px}#infoDiv input{border:none;box-shadow:#0000004d 0 1px 2px}.esri-widget--button.active,.esri-widget--button.active:hover,.esri-widget--button.active:focus{cursor:default;background-color:#999696}.esri-widget--button.active path,.esri-widget--button.active:hover path,.esri-widget--button.active:focus path{fill:#e4e4e4}\n"] });
     i0__namespace.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.16", ngImport: i0__namespace, type: GisMapComponentComponent, decorators: [{
                 type: i0.Component,
                 args: [{
                         selector: 'GisBase-GisMapComponent',
-                        template: "\n \n<div class='az' style=\"width:100%;height: 100% \">\n    \n \n    <div #mapViewNode style=\"width:80%;height: 80%;margin: auto;padding:50px;margin: 50px \"></div>\n  \n</div>\n  ",
+                        template: "\n \n<div class='az' style=\"width:100%;height: 100% \">\n    <div #mapViewNode style=\"width:100%;height: 100%  \">\n   \n      <div id=\"toolbarDiv222\" style=\"position: absolute;margin-left: -50px;\" class=\"e____sri-component esri-widget\">\n        <button  #buttonLegend (click)=\"buttonLegendClick()\" class=\"esri-widget--button esri-interactive esri-icon-legend\" title=\"legend Panel\">    </button>\n        <button  style=\"display:none\" #buttonDistance class=\"esri-widget--button esri-interactive esri-icon-measure-line\" title=\"Distance Measurement Tool\">    </button>\n        <button  style=\"display:none\" #buttonArea class=\"esri-widget--button esri-interactive esri-icon-measure-area\" title=\"Area Measurement Tool\">    </button>\n        <button  style=\"display:none\" #buttonClear class=\"esri-widget--button esri-interactive esri-icon-trash\" title=\"Clear Measurements\">     </button>\n      </div>\n  </div>\n</div>\n  ",
+                        styleUrls: ['gis-map-component.component.css']
                         //   < div #layerListDiv > </div>
                         //< div #basemapGalleryDiv > </div>
                     }]
@@ -586,6 +672,21 @@
                 }], content1: [{
                     type: i0.ViewChild,
                     args: ['basemapGalleryDiv', { static: true }]
+                }], content7: [{
+                    type: i0.ViewChild,
+                    args: ['buttonLegend', { static: true }]
+                }], content3: [{
+                    type: i0.ViewChild,
+                    args: ['buttonDistance', { static: true }]
+                }], content4: [{
+                    type: i0.ViewChild,
+                    args: ['buttonArea', { static: true }]
+                }], content5: [{
+                    type: i0.ViewChild,
+                    args: ['buttonClear', { static: true }]
+                }], content6: [{
+                    type: i0.ViewChild,
+                    args: ['buttonSwitch', { static: true }]
                 }], layerList: [{
                     type: i0.Input
                 }], queryLayer: [{

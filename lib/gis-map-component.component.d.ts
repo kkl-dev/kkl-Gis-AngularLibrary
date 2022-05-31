@@ -10,10 +10,21 @@ export declare class GisMapComponentComponent implements OnInit {
     set content2(content: ElementRef);
     private basemapGalleryDiv;
     set content1(content: ElementRef);
+    private buttonLegend;
+    set content7(content: ElementRef);
+    private buttonDistance;
+    set content3(content: ElementRef);
+    private buttonArea;
+    set content4(content: ElementRef);
+    private buttonClear;
+    set content5(content: ElementRef);
+    private buttonSwitch;
+    set content6(content: ElementRef);
     private layerHelkotView;
     private LayerList;
     private QueryLayer;
     private QueryStr;
+    private legend;
     set layerList(value: string[]);
     set queryLayer(value: string);
     set queryStr(value: string);
@@ -21,6 +32,11 @@ export declare class GisMapComponentComponent implements OnInit {
     constructor(gisBaseService: GisBaseService);
     initializeMap(): Promise<any>;
     ngOnInit(): void;
+    buttonLegendClick(): void;
+    switchView(Map: MapConstructor, layerView: any, measurement: any): void;
+    clearMeasurements(measurement: any): void;
+    distanceMeasurement(measurement: any): void;
+    areaMeasurement(measurement: any): void;
     static ɵfac: i0.ɵɵFactoryDeclaration<GisMapComponentComponent, never>;
     static ɵcmp: i0.ɵɵComponentDeclaration<GisMapComponentComponent, "GisBase-GisMapComponent", never, { "layerList": "layerList"; "queryLayer": "queryLayer"; "queryStr": "queryStr"; }, {}, never, never>;
 }
