@@ -1,4 +1,4 @@
-<div dir="rtl">
+<div dir="rtl"  style="direction:rtl">
 להלן סדר דברים לשימוש ברכיב המפה
 1.	התקנת רכיב מפה
   a.	npm i -d   github:kkl-dev/kkl-Gis-AngularLibrary</br>
