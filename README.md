@@ -1,24 +1,25 @@
-# GisMapComponent
-
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.0.
-
-## Code scaffolding
-
-Run `ng generate component component-name --project GisMapComponent` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project GisMapComponent`.
-> Note: Don't forget to add `--project GisMapComponent` or else it will be added to the default project in your `angular.json` file. 
-
-## Build
-
-Run `ng build GisMapComponent` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Publishing
-
-After building your library with `ng build GisMapComponent`, go to the dist folder `cd dist/gis-map-component` and run `npm publish`.
-
-## Running unit tests
-
-Run `ng test GisMapComponent` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+להלן סדר דברים לשימוש ברכיב המפה
+1.	התקנת רכיב מפה
+  a.	npm i -d   github:kkl-dev/kkl-Gis-AngularLibrary
+  b.	npm i esri-loader
+  c.    npm i @arcgis/core@4.22.2   
+2.	הגדרות קובץ סביבה
+  a.	לקובץ  environment ( לפי הסביבה (prod,staging,dev) )  יש להוסיף את ההגדרה GisApiUrl: 'https://knf-appl-dev3'
+3.	הגדרות ב app.module
+  a.	יבוא ספריות
+    i.	import { environment } from 'src/environments/environment     ';
+    ii.	import {GisBaseService,GisMapComponentModule} from 'gis-map-component'
+  b.	הגדרת imports 
+    i.	יש להוסיף את השורה GisMapComponentModule.forRoot(environment)
+  c.	הגדרת Providers
+    i.	יש להוסיף את השורה YaaranutService,GisBaseService
+4.	שימוש ברכיב המפה
+  a.	קובץ HTML
+    i.	<GisBase-GisMapComponent   [layerList]="layerList" [queryLayer]="layerList[1]" queryStr="GUSH_NUM=8040 and PARCEL=58"  queryResultEmpty="גוש/חלקה לא קיימים" ></GisBase-GisMapComponent>
+  b.	קובץ HTML.TS
+    i.	layerList = ["global/kkl/allLayersForAgol/FeatureServer/49/",  "global/kkl/HelkotCadaster/MapServer/1/"]                        ;
+5.	מאפיינים של המפה
+  a.	layerList – רשימה של שכבות ( סעיף  3.b.i)
+  b.	queryLayer – השיכבה שעל פיה מבוצע בחירת פוליגונים
+  c.	queryStr – ביטוי על פיו יבוצע בחירת פוליגונים
+6.	בהצלחה
