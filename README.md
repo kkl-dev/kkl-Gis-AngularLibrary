@@ -1,3 +1,4 @@
+<div dir="rtl">
 להלן סדר דברים לשימוש ברכיב המפה
 1.	התקנת רכיב מפה
   a.	npm i -d   github:kkl-dev/kkl-Gis-AngularLibrary</br>
@@ -23,3 +24,4 @@
   b.	queryLayer – השיכבה שעל פיה מבוצע בחירת פוליגונים
   c.	queryStr – ביטוי על פיו יבוצע בחירת פוליגונים
 6.	בהצלחה
+</div>
