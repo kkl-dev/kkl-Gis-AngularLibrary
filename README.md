@@ -1,7 +1,7 @@
 להלן סדר דברים לשימוש ברכיב המפה
 1.	התקנת רכיב מפה
-  a.	npm i -d   github:kkl-dev/kkl-Gis-AngularLibrary
-  b.	npm i esri-loader
+  a.	npm i -d   github:kkl-dev/kkl-Gis-AngularLibrary</br>
+  b.	npm i esri-loader</br>
   c.    npm i @arcgis/core@4.22.2   
 2.	הגדרות קובץ סביבה
   a.	לקובץ  environment ( לפי הסביבה (prod,staging,dev) )  יש להוסיף את ההגדרה GisApiUrl: 'https://knf-appl-dev3'
