@@ -386,6 +386,24 @@
             this.gisBaseService = gisBaseService;
             this.linkProm = loadCustomStyle('https://js.arcgis.com/4.23/esri/themes/light/main.css');
         }
+        Object.defineProperty(GisMapComponentComponent.prototype, "content8", {
+            set: function (content) {
+                if (content) {
+                    this.divMassage = content;
+                }
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(GisMapComponentComponent.prototype, "contentDivMassageText", {
+            set: function (content) {
+                if (content) {
+                    this.divMassageText = content;
+                }
+            },
+            enumerable: false,
+            configurable: true
+        });
         Object.defineProperty(GisMapComponentComponent.prototype, "content", {
             set: function (content) {
                 if (content) {
@@ -479,9 +497,16 @@
             enumerable: false,
             configurable: true
         });
+        Object.defineProperty(GisMapComponentComponent.prototype, "queryResultEmpty", {
+            set: function (value) {
+                this.QueryResultEmpty = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
         GisMapComponentComponent.prototype.initializeMap = function () {
             return __awaiter(this, void 0, void 0, function () {
-                var _a, MapView, WebMap, LayerList_1, FeatureLayer_1, Search_1, Measurement_1, Legend_1, webMap_1, view_1, error_1;
+                var divMassage_1, _a, MapView, WebMap, LayerList_1, FeatureLayer_1, Search_1, Measurement_1, Legend_1, webMap_1, view_1, error_1;
                 var _this = this;
                 return __generator(this, function (_b) {
                     switch (_b.label) {
@@ -490,6 +515,7 @@
                             return [4 /*yield*/, this.linkProm];
                         case 1:
                             _b.sent();
+                            divMassage_1 = this.divMassage;
                             return [4 /*yield*/, esriLoader.loadModules([
                                     "esri/views/MapView", "esri/WebMap",
                                     "esri/widgets/LayerList", "esri/layers/FeatureLayer",
@@ -579,8 +605,14 @@
                                 query.outSpatialReference = view_1.spatialReference;
                                 var az = _this.queryFeatureLayer.queryFeatures(query);
                                 az.then(function (results) {
-                                    layerView.highlight(results.features[0]);
-                                    view_1.goTo({ geometry: results.features[0].geometry.extent.expand(3) });
+                                    if (results.features.length > 0) {
+                                        divMassage_1.nativeElement.style.display = 'none';
+                                        layerView.highlight(results.features[0]);
+                                        view_1.goTo({ geometry: results.features[0].geometry.extent.expand(3) });
+                                    }
+                                    else {
+                                        divMassage_1.nativeElement.style.display = '';
+                                    }
                                 });
                                 //this.queryFeatureLayer.queryExtent(query)
                                 //  .then(response => {
@@ -601,7 +633,9 @@
             });
         };
         GisMapComponentComponent.prototype.ngOnInit = function () {
+            var _this = this;
             this.initializeMap().then(function () {
+                _this.divMassageText.nativeElement.innerText = _this.QueryResultEmpty;
                 console.log("View ready");
             });
         };
@@ -645,17 +679,23 @@
         return GisMapComponentComponent;
     }());
     GisMapComponentComponent.ɵfac = i0__namespace.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.16", ngImport: i0__namespace, type: GisMapComponentComponent, deps: [{ token: GisBaseService }], target: i0__namespace.ɵɵFactoryTarget.Component });
-    GisMapComponentComponent.ɵcmp = i0__namespace.ɵɵngDeclareComponent({ minVersion: "12.0.0", version: "12.2.16", type: GisMapComponentComponent, selector: "GisBase-GisMapComponent", inputs: { layerList: "layerList", queryLayer: "queryLayer", queryStr: "queryStr" }, viewQueries: [{ propertyName: "content", first: true, predicate: ["mapViewNode"], descendants: true, static: true }, { propertyName: "content2", first: true, predicate: ["layerListDiv"], descendants: true, static: true }, { propertyName: "content1", first: true, predicate: ["basemapGalleryDiv"], descendants: true, static: true }, { propertyName: "content7", first: true, predicate: ["buttonLegend"], descendants: true, static: true }, { propertyName: "content3", first: true, predicate: ["buttonDistance"], descendants: true, static: true }, { propertyName: "content4", first: true, predicate: ["buttonArea"], descendants: true, static: true }, { propertyName: "content5", first: true, predicate: ["buttonClear"], descendants: true, static: true }, { propertyName: "content6", first: true, predicate: ["buttonSwitch"], descendants: true, static: true }], ngImport: i0__namespace, template: "\n \n<div class='az' style=\"width:100%;height: 100% \">\n    <div #mapViewNode style=\"width:100%;height: 100%  \">\n   \n      <div id=\"toolbarDiv222\" style=\"position: absolute;margin-left: -50px;\" class=\"e____sri-component esri-widget\">\n        <button  #buttonLegend (click)=\"buttonLegendClick()\" class=\"esri-widget--button esri-interactive esri-icon-legend\" title=\"legend Panel\">    </button>\n        <button  #buttonDistance (click)=\"distanceMeasurement()\" class=\"esri-widget--button esri-interactive esri-icon-measure-line\" title=\"Distance Measurement Tool\">    </button>\n        <button  #buttonArea (click)=\"areaMeasurement()\"  class=\"esri-widget--button esri-interactive esri-icon-measure-area\" title=\"Area Measurement Tool\">    </button>\n        <button  style=\"display:none\" #buttonClear class=\"esri-widget--button esri-interactive esri-icon-trash\" title=\"Clear Measurements\">     </button>\n      </div>\n  </div>\n</div>\n  ", isInline: true, styles: [""] });
+    GisMapComponentComponent.ɵcmp = i0__namespace.ɵɵngDeclareComponent({ minVersion: "12.0.0", version: "12.2.16", type: GisMapComponentComponent, selector: "GisBase-GisMapComponent", inputs: { layerList: "layerList", queryLayer: "queryLayer", queryStr: "queryStr", queryResultEmpty: "queryResultEmpty" }, viewQueries: [{ propertyName: "content8", first: true, predicate: ["divMassage"], descendants: true, static: true }, { propertyName: "contentDivMassageText", first: true, predicate: ["divMassageText"], descendants: true, static: true }, { propertyName: "content", first: true, predicate: ["mapViewNode"], descendants: true, static: true }, { propertyName: "content2", first: true, predicate: ["layerListDiv"], descendants: true, static: true }, { propertyName: "content1", first: true, predicate: ["basemapGalleryDiv"], descendants: true, static: true }, { propertyName: "content7", first: true, predicate: ["buttonLegend"], descendants: true, static: true }, { propertyName: "content3", first: true, predicate: ["buttonDistance"], descendants: true, static: true }, { propertyName: "content4", first: true, predicate: ["buttonArea"], descendants: true, static: true }, { propertyName: "content5", first: true, predicate: ["buttonClear"], descendants: true, static: true }, { propertyName: "content6", first: true, predicate: ["buttonSwitch"], descendants: true, static: true }], ngImport: i0__namespace, template: "\n \n<div class='az' style=\"width:100%;height: 100%;position: relative \">\n    <div #mapViewNode style=\"width:100%;height: 100%;  \">\n   \n      <div id=\"toolbarDiv222\" style=\"position: absolute;margin-left: -50px;\" class=\"e____sri-component esri-widget\">\n        <button  #buttonLegend (click)=\"buttonLegendClick()\" class=\"esri-widget--button esri-interactive esri-icon-legend\" title=\"legend Panel\">    </button>\n        <button  #buttonDistance (click)=\"distanceMeasurement()\" class=\"esri-widget--button esri-interactive esri-icon-measure-line\" title=\"Distance Measurement Tool\">    </button>\n        <button  #buttonArea (click)=\"areaMeasurement()\"  class=\"esri-widget--button esri-interactive esri-icon-measure-area\" title=\"Area Measurement Tool\">    </button>\n        <button  style=\"display:none\" #buttonClear class=\"esri-widget--button esri-interactive esri-icon-trash\" title=\"Clear Measurements\">     </button>\n      </div>\n  </div>\n  <div #divMassage style=\"display:none;position: absolute;top: 25%;left: 0px;width:100%\">\n    <div #divMassageText style=\"margin: auto;width: fit-content;background-color:powderblue;padding: 10px\" >\u05DC\u05D0 \u05E0\u05D9\u05DE\u05E6\u05D0\u05D5 \u05E4\u05D5\u05DC\u05D9\u05D2\u05D5\u05E0\u05D9\u05DD \u05DE\u05EA\u05D0\u05D9\u05DE\u05D9\u05DD \u05DC\u05D7\u05D9\u05E4\u05D5\u05E9</div>\n  </div>\n</div>\n  ", isInline: true, styles: [""] });
     i0__namespace.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.16", ngImport: i0__namespace, type: GisMapComponentComponent, decorators: [{
                 type: i0.Component,
                 args: [{
                         selector: 'GisBase-GisMapComponent',
-                        template: "\n \n<div class='az' style=\"width:100%;height: 100% \">\n    <div #mapViewNode style=\"width:100%;height: 100%  \">\n   \n      <div id=\"toolbarDiv222\" style=\"position: absolute;margin-left: -50px;\" class=\"e____sri-component esri-widget\">\n        <button  #buttonLegend (click)=\"buttonLegendClick()\" class=\"esri-widget--button esri-interactive esri-icon-legend\" title=\"legend Panel\">    </button>\n        <button  #buttonDistance (click)=\"distanceMeasurement()\" class=\"esri-widget--button esri-interactive esri-icon-measure-line\" title=\"Distance Measurement Tool\">    </button>\n        <button  #buttonArea (click)=\"areaMeasurement()\"  class=\"esri-widget--button esri-interactive esri-icon-measure-area\" title=\"Area Measurement Tool\">    </button>\n        <button  style=\"display:none\" #buttonClear class=\"esri-widget--button esri-interactive esri-icon-trash\" title=\"Clear Measurements\">     </button>\n      </div>\n  </div>\n</div>\n  ",
+                        template: "\n \n<div class='az' style=\"width:100%;height: 100%;position: relative \">\n    <div #mapViewNode style=\"width:100%;height: 100%;  \">\n   \n      <div id=\"toolbarDiv222\" style=\"position: absolute;margin-left: -50px;\" class=\"e____sri-component esri-widget\">\n        <button  #buttonLegend (click)=\"buttonLegendClick()\" class=\"esri-widget--button esri-interactive esri-icon-legend\" title=\"legend Panel\">    </button>\n        <button  #buttonDistance (click)=\"distanceMeasurement()\" class=\"esri-widget--button esri-interactive esri-icon-measure-line\" title=\"Distance Measurement Tool\">    </button>\n        <button  #buttonArea (click)=\"areaMeasurement()\"  class=\"esri-widget--button esri-interactive esri-icon-measure-area\" title=\"Area Measurement Tool\">    </button>\n        <button  style=\"display:none\" #buttonClear class=\"esri-widget--button esri-interactive esri-icon-trash\" title=\"Clear Measurements\">     </button>\n      </div>\n  </div>\n  <div #divMassage style=\"display:none;position: absolute;top: 25%;left: 0px;width:100%\">\n    <div #divMassageText style=\"margin: auto;width: fit-content;background-color:powderblue;padding: 10px\" >\u05DC\u05D0 \u05E0\u05D9\u05DE\u05E6\u05D0\u05D5 \u05E4\u05D5\u05DC\u05D9\u05D2\u05D5\u05E0\u05D9\u05DD \u05DE\u05EA\u05D0\u05D9\u05DE\u05D9\u05DD \u05DC\u05D7\u05D9\u05E4\u05D5\u05E9</div>\n  </div>\n</div>\n  ",
                         styleUrls: ['gis-map-component.component.css']
                         //   < div #layerListDiv > </div>
                         //< div #basemapGalleryDiv > </div>
                     }]
-            }], ctorParameters: function () { return [{ type: GisBaseService }]; }, propDecorators: { content: [{
+            }], ctorParameters: function () { return [{ type: GisBaseService }]; }, propDecorators: { content8: [{
+                    type: i0.ViewChild,
+                    args: ['divMassage', { static: true }]
+                }], contentDivMassageText: [{
+                    type: i0.ViewChild,
+                    args: ['divMassageText', { static: true }]
+                }], content: [{
                     type: i0.ViewChild,
                     args: ['mapViewNode', { static: true }]
                 }], content2: [{
@@ -684,6 +724,8 @@
                 }], queryLayer: [{
                     type: i0.Input
                 }], queryStr: [{
+                    type: i0.Input
+                }], queryResultEmpty: [{
                     type: i0.Input
                 }] } });
     function loadCustomStyle(url) {

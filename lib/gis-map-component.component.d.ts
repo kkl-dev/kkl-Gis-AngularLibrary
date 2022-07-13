@@ -4,6 +4,10 @@ import * as i0 from "@angular/core";
 export declare class GisMapComponentComponent implements OnInit {
     private gisBaseService;
     linkProm: Promise<HTMLLinkElement>;
+    private divMassage;
+    set content8(content: ElementRef);
+    private divMassageText;
+    set contentDivMassageText(content: ElementRef);
     private mapViewEl;
     set content(content: ElementRef);
     private layerListDiv;
@@ -24,11 +28,13 @@ export declare class GisMapComponentComponent implements OnInit {
     private LayerList;
     private QueryLayer;
     private QueryStr;
+    private QueryResultEmpty;
     private legend;
     private measurement;
     set layerList(value: string[]);
     set queryLayer(value: string);
     set queryStr(value: string);
+    set queryResultEmpty(value: string);
     private queryFeatureLayer;
     constructor(gisBaseService: GisBaseService);
     initializeMap(): Promise<any>;
@@ -37,6 +43,6 @@ export declare class GisMapComponentComponent implements OnInit {
     distanceMeasurement(): void;
     areaMeasurement(): void;
     static ɵfac: i0.ɵɵFactoryDeclaration<GisMapComponentComponent, never>;
-    static ɵcmp: i0.ɵɵComponentDeclaration<GisMapComponentComponent, "GisBase-GisMapComponent", never, { "layerList": "layerList"; "queryLayer": "queryLayer"; "queryStr": "queryStr"; }, {}, never, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<GisMapComponentComponent, "GisBase-GisMapComponent", never, { "layerList": "layerList"; "queryLayer": "queryLayer"; "queryStr": "queryStr"; "queryResultEmpty": "queryResultEmpty"; }, {}, never, never>;
 }
 export declare function loadCustomStyle(url: string): Promise<HTMLLinkElement>;

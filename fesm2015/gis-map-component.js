@@ -40,6 +40,12 @@ class GisMapComponentComponent {
         this.gisBaseService = gisBaseService;
         this.linkProm = loadCustomStyle('https://js.arcgis.com/4.23/esri/themes/light/main.css');
     }
+    set content8(content) { if (content) {
+        this.divMassage = content;
+    } }
+    set contentDivMassageText(content) { if (content) {
+        this.divMassageText = content;
+    } }
     set content(content) { if (content) {
         this.mapViewEl = content;
     } }
@@ -73,10 +79,14 @@ class GisMapComponentComponent {
     set queryStr(value) {
         this.QueryStr = value;
     }
+    set queryResultEmpty(value) {
+        this.QueryResultEmpty = value;
+    }
     initializeMap() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 yield this.linkProm;
+                const divMassage = this.divMassage;
                 const [MapView, WebMap, LayerList, FeatureLayer, Search, Measurement, Legend] = yield loadModules([
                     "esri/views/MapView", "esri/WebMap",
                     "esri/widgets/LayerList", "esri/layers/FeatureLayer",
@@ -162,8 +172,14 @@ class GisMapComponentComponent {
                     query.outSpatialReference = view.spatialReference;
                     var az = this.queryFeatureLayer.queryFeatures(query);
                     az.then(function (results) {
-                        layerView.highlight(results.features[0]);
-                        view.goTo({ geometry: results.features[0].geometry.extent.expand(3) });
+                        if (results.features.length > 0) {
+                            divMassage.nativeElement.style.display = 'none';
+                            layerView.highlight(results.features[0]);
+                            view.goTo({ geometry: results.features[0].geometry.extent.expand(3) });
+                        }
+                        else {
+                            divMassage.nativeElement.style.display = '';
+                        }
                     });
                     //this.queryFeatureLayer.queryExtent(query)
                     //  .then(response => {
@@ -182,6 +198,7 @@ class GisMapComponentComponent {
     }
     ngOnInit() {
         this.initializeMap().then(() => {
+            this.divMassageText.nativeElement.innerText = this.QueryResultEmpty;
             console.log("View ready");
         });
     }
@@ -224,10 +241,10 @@ class GisMapComponentComponent {
     }
 }
 GisMapComponentComponent.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.16", ngImport: i0, type: GisMapComponentComponent, deps: [{ token: GisBaseService }], target: i0.ɵɵFactoryTarget.Component });
-GisMapComponentComponent.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "12.0.0", version: "12.2.16", type: GisMapComponentComponent, selector: "GisBase-GisMapComponent", inputs: { layerList: "layerList", queryLayer: "queryLayer", queryStr: "queryStr" }, viewQueries: [{ propertyName: "content", first: true, predicate: ["mapViewNode"], descendants: true, static: true }, { propertyName: "content2", first: true, predicate: ["layerListDiv"], descendants: true, static: true }, { propertyName: "content1", first: true, predicate: ["basemapGalleryDiv"], descendants: true, static: true }, { propertyName: "content7", first: true, predicate: ["buttonLegend"], descendants: true, static: true }, { propertyName: "content3", first: true, predicate: ["buttonDistance"], descendants: true, static: true }, { propertyName: "content4", first: true, predicate: ["buttonArea"], descendants: true, static: true }, { propertyName: "content5", first: true, predicate: ["buttonClear"], descendants: true, static: true }, { propertyName: "content6", first: true, predicate: ["buttonSwitch"], descendants: true, static: true }], ngImport: i0, template: `
+GisMapComponentComponent.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "12.0.0", version: "12.2.16", type: GisMapComponentComponent, selector: "GisBase-GisMapComponent", inputs: { layerList: "layerList", queryLayer: "queryLayer", queryStr: "queryStr", queryResultEmpty: "queryResultEmpty" }, viewQueries: [{ propertyName: "content8", first: true, predicate: ["divMassage"], descendants: true, static: true }, { propertyName: "contentDivMassageText", first: true, predicate: ["divMassageText"], descendants: true, static: true }, { propertyName: "content", first: true, predicate: ["mapViewNode"], descendants: true, static: true }, { propertyName: "content2", first: true, predicate: ["layerListDiv"], descendants: true, static: true }, { propertyName: "content1", first: true, predicate: ["basemapGalleryDiv"], descendants: true, static: true }, { propertyName: "content7", first: true, predicate: ["buttonLegend"], descendants: true, static: true }, { propertyName: "content3", first: true, predicate: ["buttonDistance"], descendants: true, static: true }, { propertyName: "content4", first: true, predicate: ["buttonArea"], descendants: true, static: true }, { propertyName: "content5", first: true, predicate: ["buttonClear"], descendants: true, static: true }, { propertyName: "content6", first: true, predicate: ["buttonSwitch"], descendants: true, static: true }], ngImport: i0, template: `
  
-<div class='az' style="width:100%;height: 100% ">
-    <div #mapViewNode style="width:100%;height: 100%  ">
+<div class='az' style="width:100%;height: 100%;position: relative ">
+    <div #mapViewNode style="width:100%;height: 100%;  ">
    
       <div id="toolbarDiv222" style="position: absolute;margin-left: -50px;" class="e____sri-component esri-widget">
         <button  #buttonLegend (click)="buttonLegendClick()" class="esri-widget--button esri-interactive esri-icon-legend" title="legend Panel">    </button>
@@ -235,6 +252,9 @@ GisMapComponentComponent.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "12.0.0
         <button  #buttonArea (click)="areaMeasurement()"  class="esri-widget--button esri-interactive esri-icon-measure-area" title="Area Measurement Tool">    </button>
         <button  style="display:none" #buttonClear class="esri-widget--button esri-interactive esri-icon-trash" title="Clear Measurements">     </button>
       </div>
+  </div>
+  <div #divMassage style="display:none;position: absolute;top: 25%;left: 0px;width:100%">
+    <div #divMassageText style="margin: auto;width: fit-content;background-color:powderblue;padding: 10px" >לא נימצאו פוליגונים מתאימים לחיפוש</div>
   </div>
 </div>
   `, isInline: true, styles: [""] });
@@ -244,8 +264,8 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.16", ngImpo
                     selector: 'GisBase-GisMapComponent',
                     template: `
  
-<div class='az' style="width:100%;height: 100% ">
-    <div #mapViewNode style="width:100%;height: 100%  ">
+<div class='az' style="width:100%;height: 100%;position: relative ">
+    <div #mapViewNode style="width:100%;height: 100%;  ">
    
       <div id="toolbarDiv222" style="position: absolute;margin-left: -50px;" class="e____sri-component esri-widget">
         <button  #buttonLegend (click)="buttonLegendClick()" class="esri-widget--button esri-interactive esri-icon-legend" title="legend Panel">    </button>
@@ -254,13 +274,22 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.16", ngImpo
         <button  style="display:none" #buttonClear class="esri-widget--button esri-interactive esri-icon-trash" title="Clear Measurements">     </button>
       </div>
   </div>
+  <div #divMassage style="display:none;position: absolute;top: 25%;left: 0px;width:100%">
+    <div #divMassageText style="margin: auto;width: fit-content;background-color:powderblue;padding: 10px" >לא נימצאו פוליגונים מתאימים לחיפוש</div>
+  </div>
 </div>
   `,
                     styleUrls: ['gis-map-component.component.css']
                     //   < div #layerListDiv > </div>
                     //< div #basemapGalleryDiv > </div>
                 }]
-        }], ctorParameters: function () { return [{ type: GisBaseService }]; }, propDecorators: { content: [{
+        }], ctorParameters: function () { return [{ type: GisBaseService }]; }, propDecorators: { content8: [{
+                type: ViewChild,
+                args: ['divMassage', { static: true }]
+            }], contentDivMassageText: [{
+                type: ViewChild,
+                args: ['divMassageText', { static: true }]
+            }], content: [{
                 type: ViewChild,
                 args: ['mapViewNode', { static: true }]
             }], content2: [{
@@ -289,6 +318,8 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.16", ngImpo
             }], queryLayer: [{
                 type: Input
             }], queryStr: [{
+                type: Input
+            }], queryResultEmpty: [{
                 type: Input
             }] } });
 function loadCustomStyle(url) {
