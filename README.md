@@ -1,4 +1,4 @@
- 
+<div style="color:red;direction:rtl">
 
 להלן סדר דברים לשימוש ברכיב המפה
 >1.	התקנת רכיב מפה
@@ -10,19 +10,26 @@
 >3.	הגדרות ב app.module
 >>>א.	יבוא ספריות
 >>>>א1.	import { environment } from 'src/environments/environment     ';
+ 
 >>>>א2.	import {GisBaseService,GisMapComponentModule} from 'gis-map-component'
+ 
 >>>ב.	הגדרת imports 
 >>>>ב1.	יש להוסיף את השורה GisMapComponentModule.forRoot(environment)
 >>>ג.	הגדרת Providers
 >>>>ג1.	יש להוסיף את השורה YaaranutService,GisBaseService
 >4.	שימוש ברכיב המפה
 >>>א	קובץ HTML
->>>>א1.	<GisBase-GisMapComponent   [layerList]="layerList" [queryLayer]="layerList[1]" queryStr="GUSH_NUM=8040 and PARCEL=58"  queryResultEmpty="גוש/חלקה לא קיימים" ></GisBase-GisMapComponent></br>
->>>ב.	קובץ HTML.TS</br>
->>>>ב1.	layerList = ["global/kkl/allLayersForAgol/FeatureServer/49/",  "global/kkl/HelkotCadaster/MapServer/1/"];</br>
->5.	מאפיינים של המפה</br>
->>>א.	layerList – רשימה של שכבות ( סעיף  3.b.i)</br>
->>>ב.	queryLayer – ה</br>שיכבה שעל פיה מבוצע בחירת פוליגונים
->>>ג.	queryStr – ביטוי על פיו יבוצע בחירת פוליגונים</br>
->6.	בהצלחה</br>
+>>>>א1.	<GisBase-GisMapComponent   [layerList]="layerList" [queryLayer]="layerList[1]" queryStr="GUSH_NUM=8040 and PARCEL=58"  queryResultEmpty="גוש/חלקה לא קיימים" ></GisBase-GisMapComponent>
  
+>>>ב.	קובץ HTML.TS 
+>>>>ב1.	layerList = ["global/kkl/allLayersForAgol/FeatureServer/49/",  "global/kkl/HelkotCadaster/MapServer/1/"];
+ 
+>5.	מאפיינים של המפה 
+>>>א.	layerList – רשימה של שכבות ( סעיף  3.b.i) 
+ 
+>>>ב.	queryLayer – 
+ ה שיכבה שעל פיה מבוצע בחירת פוליגונים
+>>>ג.	queryStr – 
+ ביטוי על פיו יבוצע בחירת פוליגונים
+>6.	בהצלחה
+</div>
