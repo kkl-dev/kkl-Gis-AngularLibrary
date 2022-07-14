@@ -5,9 +5,15 @@
 ### א.	npm i -d   github:kkl-dev/kkl-Gis-AngularLibrary
 ### ב.	npm i esri-loader
 ### ג.    npm i @arcgis/core@4.22.2   
-## 2.	הגדרות קובץ סביבה
+
+ 
+ ##  2.	התקנת רכיב מפה בפעם השניה
+### א.	npm i -d   github:kkl-dev/kkl-Gis-AngularLibrary
+ 
+ 
+ ## 3.	הגדרות קובץ סביבה
 ### א.	לקובץ  environment ( לפי הסביבה (prod,staging,dev) )  יש להוסיף את ההגדרה GisApiUrl: 'https://knf-appl-dev3'
-## 3.	הגדרות ב app.module
+## 4.	הגדרות ב app.module
 ### א.	יבוא ספריות
 ##### א1.	import { environment } from 'src/environments/environment     ';
  
@@ -17,7 +23,7 @@
 ##### ב1.	יש להוסיף את השורה GisMapComponentModule.forRoot(environment)
 ### ג.	הגדרת Providers
 ##### ג1.	יש להוסיף את השורה YaaranutService,GisBaseService
-## 4.	שימוש ברכיב המפה
+## 5.	שימוש ברכיב המפה
 ### א	קובץ HTML
 ##### א1.	<GisBase-GisMapComponent   [layerList]="layerList" [queryLayer]="layerList[1]" queryStr="GUSH_NUM=8040 and PARCEL=58"  queryResultEmpty="גוש/חלקה לא קיימים" ></GisBase-GisMapComponent>
  
@@ -31,5 +37,5 @@
 ### ג.	queryStr – ביטוי על פיו יבוצע בחירת פוליגונים
 ### ג.	queryResultEmpty – טקסט שיופיע אם תוצאת הבחירה ריקה
  
-6.	בהצלחה
+7.	בהצלחה
 </div>
