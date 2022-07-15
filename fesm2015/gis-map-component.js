@@ -87,10 +87,11 @@ class GisMapComponentComponent {
             try {
                 yield this.linkProm;
                 const divMassage = this.divMassage;
-                const [MapView, WebMap, LayerList, FeatureLayer, Search, Measurement, Legend] = yield loadModules([
+                const [MapView, WebMap, LayerList, FeatureLayer, Search, Measurement, Legend, Point, SpatialReference] = yield loadModules([
                     "esri/views/MapView", "esri/WebMap",
                     "esri/widgets/LayerList", "esri/layers/FeatureLayer",
-                    "esri/widgets/Search", "esri/widgets/Measurement", "esri/widgets/Legend"
+                    "esri/widgets/Search", "esri/widgets/Measurement", "esri/widgets/Legend",
+                    "esri/geometry/Point", "esri/geometry/SpatialReference"
                 ]);
                 const webMap = new WebMap({
                     basemap: "topo"
@@ -99,6 +100,7 @@ class GisMapComponentComponent {
                     container: this.mapViewEl.nativeElement,
                     map: webMap
                 });
+                view.center = [31.744037, 35.049995];
                 //  let featerLayer = new FeatureLayer({
                 //  //url: "https://services2.arcgis.com/utNNrmXb4IZOLXXs/ArcGIS/rest/services/JNFILForest/FeatureServer/0"
                 //  url: "https://kklrgm.kkl.org.il/kklags/rest/services/allLayersForAgol/FeatureServer/7"
@@ -108,7 +110,7 @@ class GisMapComponentComponent {
                 //});
                 this.LayerList.forEach((layerStr) => {
                     const featureLayer = new FeatureLayer({
-                        url: this.gisBaseService.apiUrl + "/ArcGIS/rest/services/" + layerStr
+                        url: this.gisBaseService.apiUrl + "/ArcGIS/rest/services/" + layerStr,
                     });
                     webMap.add(featureLayer);
                     if (layerStr.includes(this.QueryLayer)) {
@@ -129,7 +131,7 @@ class GisMapComponentComponent {
                     //const basemapGallery = new BasemapGallery({  view: view,    container: document.createElement("div")    });
                     //view.ui.add(basemapGallery, {   position: "top-right"    });
                     this.legend = new Legend({ view: view, style: { type: "classic", layout: 'stack' }, layerInfos: [{ layer: this.queryFeatureLayer, title: "שכבת חלקות" }] });
-                    view.ui.add(this.legend, "bottom-right");
+                    //view.ui.add(this.legend, "bottom-right");
                     this.measurement = new Measurement({ view: view });
                     view.ui.add(this.measurement, "bottom-right");
                     ////this.buttonSwitch.addEventListener("click", () => { this.switchView(Map, this.queryFeatureLayer,  measurement); });
@@ -175,7 +177,23 @@ class GisMapComponentComponent {
                         if (results.features.length > 0) {
                             divMassage.nativeElement.style.display = 'none';
                             layerView.highlight(results.features[0]);
-                            view.goTo({ geometry: results.features[0].geometry.extent.expand(3) });
+                            /*view.goTo({ geometry: results.features[0].geometry.extent.expand(3) });*/
+                            //var p: Point;
+                            //p = results.features[0].geometry as Point;
+                            //p.spatialReference = new SpatialReference({ wkid: 3857 });
+                            //view.spatialReference = new SpatialReference({ wkid: 3857 });
+                            //view.goTo({
+                            //  /*target: [35.049995, 31.744037]*/
+                            //  /*target: [222000, 630000]*/
+                            //  /*target: p*/
+                            //  target: [3926637.1977999993, 3860628.0922000031]
+                            //})
+                            view.when(function () {
+                                view.goTo({
+                                    target: results.features[0],
+                                    zoom: 20
+                                });
+                            });
                         }
                         else {
                             divMassage.nativeElement.style.display = '';

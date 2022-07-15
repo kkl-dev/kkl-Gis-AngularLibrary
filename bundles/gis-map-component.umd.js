@@ -506,7 +506,7 @@
         });
         GisMapComponentComponent.prototype.initializeMap = function () {
             return __awaiter(this, void 0, void 0, function () {
-                var divMassage_1, _a, MapView, WebMap, LayerList_1, FeatureLayer_1, Search_1, Measurement_1, Legend_1, webMap_1, view_1, error_1;
+                var divMassage_1, _a, MapView, WebMap, LayerList_1, FeatureLayer_1, Search_1, Measurement_1, Legend_1, Point, SpatialReference, webMap_1, view_1, error_1;
                 var _this = this;
                 return __generator(this, function (_b) {
                     switch (_b.label) {
@@ -519,10 +519,11 @@
                             return [4 /*yield*/, esriLoader.loadModules([
                                     "esri/views/MapView", "esri/WebMap",
                                     "esri/widgets/LayerList", "esri/layers/FeatureLayer",
-                                    "esri/widgets/Search", "esri/widgets/Measurement", "esri/widgets/Legend"
+                                    "esri/widgets/Search", "esri/widgets/Measurement", "esri/widgets/Legend",
+                                    "esri/geometry/Point", "esri/geometry/SpatialReference"
                                 ])];
                         case 2:
-                            _a = __read.apply(void 0, [_b.sent(), 7]), MapView = _a[0], WebMap = _a[1], LayerList_1 = _a[2], FeatureLayer_1 = _a[3], Search_1 = _a[4], Measurement_1 = _a[5], Legend_1 = _a[6];
+                            _a = __read.apply(void 0, [_b.sent(), 9]), MapView = _a[0], WebMap = _a[1], LayerList_1 = _a[2], FeatureLayer_1 = _a[3], Search_1 = _a[4], Measurement_1 = _a[5], Legend_1 = _a[6], Point = _a[7], SpatialReference = _a[8];
                             webMap_1 = new WebMap({
                                 basemap: "topo"
                             });
@@ -530,6 +531,7 @@
                                 container: this.mapViewEl.nativeElement,
                                 map: webMap_1
                             });
+                            view_1.center = [31.744037, 35.049995];
                             //  let featerLayer = new FeatureLayer({
                             //  //url: "https://services2.arcgis.com/utNNrmXb4IZOLXXs/ArcGIS/rest/services/JNFILForest/FeatureServer/0"
                             //  url: "https://kklrgm.kkl.org.il/kklags/rest/services/allLayersForAgol/FeatureServer/7"
@@ -539,7 +541,7 @@
                             //});
                             this.LayerList.forEach(function (layerStr) {
                                 var featureLayer = new FeatureLayer_1({
-                                    url: _this.gisBaseService.apiUrl + "/ArcGIS/rest/services/" + layerStr
+                                    url: _this.gisBaseService.apiUrl + "/ArcGIS/rest/services/" + layerStr,
                                 });
                                 webMap_1.add(featureLayer);
                                 if (layerStr.includes(_this.QueryLayer)) {
@@ -560,7 +562,7 @@
                                     //const basemapGallery = new BasemapGallery({  view: view,    container: document.createElement("div")    });
                                     //view.ui.add(basemapGallery, {   position: "top-right"    });
                                     _this.legend = new Legend_1({ view: view_1, style: { type: "classic", layout: 'stack' }, layerInfos: [{ layer: _this.queryFeatureLayer, title: "שכבת חלקות" }] });
-                                    view_1.ui.add(_this.legend, "bottom-right");
+                                    //view.ui.add(this.legend, "bottom-right");
                                     _this.measurement = new Measurement_1({ view: view_1 });
                                     view_1.ui.add(_this.measurement, "bottom-right");
                                     ////this.buttonSwitch.addEventListener("click", () => { this.switchView(Map, this.queryFeatureLayer,  measurement); });
@@ -608,7 +610,23 @@
                                     if (results.features.length > 0) {
                                         divMassage_1.nativeElement.style.display = 'none';
                                         layerView.highlight(results.features[0]);
-                                        view_1.goTo({ geometry: results.features[0].geometry.extent.expand(3) });
+                                        /*view.goTo({ geometry: results.features[0].geometry.extent.expand(3) });*/
+                                        //var p: Point;
+                                        //p = results.features[0].geometry as Point;
+                                        //p.spatialReference = new SpatialReference({ wkid: 3857 });
+                                        //view.spatialReference = new SpatialReference({ wkid: 3857 });
+                                        //view.goTo({
+                                        //  /*target: [35.049995, 31.744037]*/
+                                        //  /*target: [222000, 630000]*/
+                                        //  /*target: p*/
+                                        //  target: [3926637.1977999993, 3860628.0922000031]
+                                        //})
+                                        view_1.when(function () {
+                                            view_1.goTo({
+                                                target: results.features[0],
+                                                zoom: 20
+                                            });
+                                        });
                                     }
                                     else {
                                         divMassage_1.nativeElement.style.display = '';
