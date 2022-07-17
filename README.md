@@ -28,13 +28,13 @@
 ##### א1.	<GisBase-GisMapComponent   [layerList]="layerList" [queryLayer]="layerList[1]" queryStr="GUSH_NUM=8040 and PARCEL=58"  queryResultEmpty="גוש/חלקה לא קיימים" ></GisBase-GisMapComponent>
 
 ### ב.	קובץ HTML.TS 
-##### ב1.	layerList = ["global/kkl/allLayersForAgol/FeatureServer/49/",  "global/kkl/HelkotCadaster/MapServer/1/"];
+##### ב1. הגדרת משתנה layerList מערך של STRING  
+##### ב2.	layerList = ["global/kkl/allLayersForAgol/FeatureServer/49/",  "global/kkl/HelkotCadaster/MapServer/1/"];
 
 ## 5.	מאפיינים של המפה 
 ### א.	layerList – רשימה של שכבות ( סעיף  3.b.i) 
-
 ### ב.	queryLayer – השיכבה שעל פיה מבוצע בחירת פוליגונים
 ### ג.	queryStr – ביטוי על פיו יבוצע בחירת פוליגונים
-### ג.	queryResultEmpty – טקסט שיופיע אם תוצאת הבחירה ריקה
+### ד.	queryResultEmpty – טקסט שיופיע אם תוצאת הבחירה ריקה
 
 7.	בהצלחה
