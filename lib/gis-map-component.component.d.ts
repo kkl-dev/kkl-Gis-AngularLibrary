@@ -1,4 +1,5 @@
 import { ElementRef, OnInit } from '@angular/core';
+import MapView from "@arcgis/core/views/MapView";
 import { GisBaseService } from '../GisBase.service';
 import * as i0 from "@angular/core";
 export declare class GisMapComponentComponent implements OnInit {
@@ -36,9 +37,13 @@ export declare class GisMapComponentComponent implements OnInit {
     set queryStr(value: string);
     set queryResultEmpty(value: string);
     private queryFeatureLayer;
+    private view;
+    private layerView;
+    FeatureHighlights: never[];
     constructor(gisBaseService: GisBaseService);
-    initializeMap(): Promise<any>;
+    initializeMap(): Promise<MapView | null>;
     ngOnInit(): void;
+    MakeQuery(): void;
     buttonLegendClick(): void;
     distanceMeasurement(): void;
     areaMeasurement(): void;

@@ -39,6 +39,7 @@ class GisMapComponentComponent {
     constructor(gisBaseService) {
         this.gisBaseService = gisBaseService;
         this.linkProm = loadCustomStyle('https://js.arcgis.com/4.23/esri/themes/light/main.css');
+        this.FeatureHighlights = [];
     }
     set content8(content) { if (content) {
         this.divMassage = content;
@@ -78,6 +79,7 @@ class GisMapComponentComponent {
     }
     set queryStr(value) {
         this.QueryStr = value;
+        this.MakeQuery();
     }
     set queryResultEmpty(value) {
         this.QueryResultEmpty = value;
@@ -96,11 +98,11 @@ class GisMapComponentComponent {
                 const webMap = new WebMap({
                     basemap: "topo"
                 });
-                let view = new MapView({
+                this.view = new MapView({
                     container: this.mapViewEl.nativeElement,
                     map: webMap
                 });
-                view.center = [31.744037, 35.049995];
+                //this.view.center = [31.744037, 35.049995];
                 //  let featerLayer = new FeatureLayer({
                 //  //url: "https://services2.arcgis.com/utNNrmXb4IZOLXXs/ArcGIS/rest/services/JNFILForest/FeatureServer/0"
                 //  url: "https://kklrgm.kkl.org.il/kklags/rest/services/allLayersForAgol/FeatureServer/7"
@@ -117,23 +119,23 @@ class GisMapComponentComponent {
                         this.queryFeatureLayer = featureLayer;
                     }
                 });
-                yield view.when(() => {
-                    var layerList = new LayerList({ view: view });
+                yield this.view.when(() => {
+                    var layerList = new LayerList({ view: this.view });
                     //view.ui.add(layerList, "top-right");
-                    var search = new Search({ view: view });
+                    var search = new Search({ view: this.view });
                     //view.ui.add(search, "top-right");
-                    var zoom = new Zoom({ view: view, layout: "horizontal" });
+                    var zoom = new Zoom({ view: this.view, layout: "horizontal" });
                     //view.ui.add(zoom, "bottom-right");
-                    const compassWidget = new Compass({ view: view });
-                    view.ui.add(compassWidget, "top-left");
-                    const scaleBar = new ScaleBar({ view: view, unit: "metric", style: "ruler" });
+                    const compassWidget = new Compass({ view: this.view });
+                    this.view.ui.add(compassWidget, "top-left");
+                    const scaleBar = new ScaleBar({ view: this.view, unit: "metric", style: "ruler" });
                     //view.ui.add(scaleBar, { position: "bottom-left"});
                     //const basemapGallery = new BasemapGallery({  view: view,    container: document.createElement("div")    });
                     //view.ui.add(basemapGallery, {   position: "top-right"    });
-                    this.legend = new Legend({ view: view, style: { type: "classic", layout: 'stack' }, layerInfos: [{ layer: this.queryFeatureLayer, title: "שכבת חלקות" }] });
+                    this.legend = new Legend({ view: this.view, style: { type: "classic", layout: 'stack' }, layerInfos: [{ layer: this.queryFeatureLayer, title: "שכבת חלקות" }] });
                     //view.ui.add(this.legend, "bottom-right");
-                    this.measurement = new Measurement({ view: view });
-                    view.ui.add(this.measurement, "bottom-right");
+                    this.measurement = new Measurement({ view: this.view });
+                    this.view.ui.add(this.measurement, "bottom-right");
                     ////this.buttonSwitch.addEventListener("click", () => { this.switchView(Map, this.queryFeatureLayer,  measurement); });
                     //this.buttonDistance.addEventListener("click", () => { this.distanceMeasurement( measurement); });
                     //this.buttonArea.addEventListener("click", () => { this.areaMeasurement(measurement); });
@@ -168,37 +170,9 @@ class GisMapComponentComponent {
                     //  });
                     /* });*/
                 });
-                view.whenLayerView(this.queryFeatureLayer).then((layerView) => {
-                    const query = this.queryFeatureLayer.createQuery();
-                    query.where = this.QueryStr;
-                    query.outSpatialReference = view.spatialReference;
-                    var az = this.queryFeatureLayer.queryFeatures(query);
-                    az.then(function (results) {
-                        if (results.features.length > 0) {
-                            divMassage.nativeElement.style.display = 'none';
-                            layerView.highlight(results.features[0]);
-                            /*view.goTo({ geometry: results.features[0].geometry.extent.expand(3) });*/
-                            //var p: Point;
-                            //p = results.features[0].geometry as Point;
-                            //p.spatialReference = new SpatialReference({ wkid: 3857 });
-                            //view.spatialReference = new SpatialReference({ wkid: 3857 });
-                            //view.goTo({
-                            //  /*target: [35.049995, 31.744037]*/
-                            //  /*target: [222000, 630000]*/
-                            //  /*target: p*/
-                            //  target: [3926637.1977999993, 3860628.0922000031]
-                            //})
-                            view.when(function () {
-                                view.goTo({
-                                    target: results.features[0],
-                                    zoom: 20
-                                });
-                            });
-                        }
-                        else {
-                            divMassage.nativeElement.style.display = '';
-                        }
-                    });
+                this.view.whenLayerView(this.queryFeatureLayer).then((layerView) => {
+                    this.layerView = layerView;
+                    this.MakeQuery();
                     //this.queryFeatureLayer.queryExtent(query)
                     //  .then(response => {
                     //    if (response.extent !== null) {
@@ -207,10 +181,11 @@ class GisMapComponentComponent {
                     //    }
                     //  });
                 });
-                return view;
+                return this.view;
             }
             catch (error) {
                 console.log("EsriLoader: ", error);
+                return null;
             }
         });
     }
@@ -219,6 +194,51 @@ class GisMapComponentComponent {
             this.divMassageText.nativeElement.innerText = this.QueryResultEmpty;
             console.log("View ready");
         });
+    }
+    MakeQuery() {
+        const view = this.view;
+        const layerView = this.layerView;
+        const divMassage = this.divMassage;
+        let FeatureHighlights = this.FeatureHighlights;
+        if (this.queryFeatureLayer !== undefined) {
+            if (FeatureHighlights.length > 0) {
+                FeatureHighlights.forEach(function (highlight) {
+                    highlight.remove();
+                });
+                FeatureHighlights = [];
+            }
+            const query = this.queryFeatureLayer.createQuery();
+            query.where = this.QueryStr;
+            query.outSpatialReference = this.view.spatialReference;
+            var az = this.queryFeatureLayer.queryFeatures(query);
+            az.then(function (results) {
+                if (results.features.length > 0) {
+                    divMassage.nativeElement.style.display = 'none';
+                    let FeatureHighlights1 = layerView.highlight(results.features[0]);
+                    FeatureHighlights.push(FeatureHighlights1);
+                    /*view.goTo({ geometry: results.features[0].geometry.extent.expand(3) });*/
+                    //var p: Point;
+                    //p = results.features[0].geometry as Point;
+                    //p.spatialReference = new SpatialReference({ wkid: 3857 });
+                    //view.spatialReference = new SpatialReference({ wkid: 3857 });
+                    //view.goTo({
+                    //  /*target: [35.049995, 31.744037]*/
+                    //  /*target: [222000, 630000]*/
+                    //  /*target: p*/
+                    //  target: [3926637.1977999993, 3860628.0922000031]
+                    //})
+                    view.when(function () {
+                        view.goTo({
+                            target: results.features[0],
+                            zoom: 20
+                        });
+                    });
+                }
+                else {
+                    divMassage.nativeElement.style.display = '';
+                }
+            });
+        }
     }
     buttonLegendClick() {
         this.legend.visible = !this.legend.visible;
